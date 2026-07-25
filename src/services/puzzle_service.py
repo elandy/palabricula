@@ -76,10 +76,11 @@ def get_puzzle_data(puzzle_id):
                 "display": w["display"],
                 "bonus": w.get("bonus", False),
             }
+        stats = puzzle.solution_json.get("stats", {})
         return {
-            "total_words": len(words),
-            "total_score": puzzle.solution_json["stats"].get("score", 0),
-            "bonus_word_count": puzzle.solution_json["stats"].get("bonus_count", 0),
+            "total_words": stats.get("count", 0),
+            "total_score": stats.get("score", 0),
+            "bonus_word_count": stats.get("bonus_count", 0),
             "words": words,
         }
 
