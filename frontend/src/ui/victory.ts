@@ -1,3 +1,5 @@
+import {playVictorySound} from "../audio/audio";
+
 export function showVictoryModal() {
     const modal = document.getElementById("victory-modal") as HTMLDivElement;
     const card = modal.querySelector(".victory-card") as HTMLDivElement;
@@ -9,6 +11,7 @@ export function showVictoryModal() {
 
     card.classList.add("victory-card");
     modal.classList.remove("hidden");
+    playVictorySound();
 }
 
 function hideVictoryModal() {

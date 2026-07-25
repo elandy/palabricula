@@ -215,9 +215,11 @@ def generate_puzzle(board=None, puzzle_date: date | None = None):
 
             bonus_words = words - normal_words
 
-            used = set()
-            for data in solutions.values():
-                used.update(data["path"])
+            used = {
+                cell
+                for word in normal_words
+                for cell in solutions[word]["path"]
+            }
 
             if (
                 MIN_WORDS <= len(words) <= MAX_WORDS
@@ -239,9 +241,11 @@ def generate_puzzle(board=None, puzzle_date: date | None = None):
 
         bonus_words = words - normal_words
 
-        used = set()
-        for data in solutions.values():
-            used.update(data["path"])
+        used = {
+            cell
+            for word in normal_words
+            for cell in solutions[word]["path"]
+        }
 
         if len(used) != SIZE * SIZE:
             raise ValueError("Board has unused tiles")

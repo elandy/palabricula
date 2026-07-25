@@ -6,6 +6,7 @@ let letterBuffer: AudioBuffer;
 let correctBuffer: AudioBuffer;
 let wrongBuffer: AudioBuffer;
 let foundBuffer: AudioBuffer;
+let victoryBuffer: AudioBuffer;
 
 export function isMuted() {
     return muted;
@@ -29,6 +30,7 @@ correctBuffer = await loadSound("/assets/sounds/correct.mp3");
 wrongBuffer = await loadSound("/assets/sounds/wrong.mp3");
 letterBuffer = await loadSound("/assets/sounds/letter.mp3");
 foundBuffer = await loadSound("/assets/sounds/found.mp3");
+victoryBuffer = await loadSound("/assets/sounds/victory.mp3");
 
 export function playBuffer(buffer: AudioBuffer, playbackRate = 1) {
     if (muted) {return;}
@@ -48,6 +50,10 @@ export function playLetterSound(index: number) {
     const rate = Math.pow(semitoneRatio, steps);
 
     playBuffer(letterBuffer, rate);
+}
+
+export function playVictorySound() {
+    playBuffer(victoryBuffer);
 }
 
 export { correctBuffer, wrongBuffer, foundBuffer }

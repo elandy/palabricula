@@ -1,5 +1,5 @@
 from datetime import timedelta
-from src.scripts.generate_puzzle import generate_puzzle
+from src.scripts.generate_puzzle_v2 import find_puzzle
 from src.scripts.import_puzzle import import_puzzle
 
 
@@ -7,7 +7,7 @@ def batch_generate_and_import(n, start_date):
     for i in range(n):
         d = start_date + timedelta(days=i)
         print(f"Generating puzzle for {d}...")
-        result = generate_puzzle(puzzle_date=d)
+        result = find_puzzle(puzzle_date=d)
         print(f"Importing puzzle for {d}...")
         import_puzzle(
             result["puzzle"],

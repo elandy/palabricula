@@ -24,10 +24,8 @@
             <div class="progress-bar"></div>
             <div class="progress-text"></div>
         </div>
-        <span class="meta-sep">•</span>
-        <button id="leaderboard-btn" title="Ranking / Estadísticas">🏆 📊</button>
-        <span class="meta-sep">•</span>
-        <button id="mute-btn">🔊</button>
+        <button id="leaderboard-btn" class="menu-btn" title="Ranking / Estadísticas">📊</button>
+        <button id="mute-btn" class="menu-btn">🔊</button>
     </div>
     <div class="player-info-container">
         <div id="player-info">Anónimo</div>
@@ -37,10 +35,31 @@
     <div class="game-layout">
         <div class="left-panel">
             <div id="board" translate="no"></div>
+            <div id="ad-slot">
+            <!-- ad network code goes here -->
+            </div>
         </div>
         <div class="right-panel">
             <div id="found-words" translate="no"></div>
         </div>
+
+        <div class="page-footer">
+            <div class="footer-info">
+                <p>Hecho por Andrés Politi</p>
+                <p><a href="mailto:tucorreo@example.com">elandy@gmail.com</a></p>
+                <p><a href="https://github.com/elandy/squaredle_spanish" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+                <p>&copy; 2026 Palabrícula</p>
+            </div>
+            <img
+                id="floor-cat"
+                src="/assets/cat.gif"
+                alt=""
+                width="100"
+                height="102"
+                draggable="false"
+            />
+        </div>
+
     </div>
 </div>
 
@@ -118,8 +137,14 @@
 
 <div id="victory-modal" class="modal hidden">
     <div class="modal-card victory-card">
-        <div class="victory-icon">
-            🏆
+        <div class="victory-image">
+            <img
+                src="/assets/cat2.gif"
+                alt="¡Gato en la caja de la victoria!"
+                width="128"
+                height="72"
+                draggable="false"
+            />
         </div>
 
         <h2>¡Felicidades!</h2>

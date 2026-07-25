@@ -17,7 +17,7 @@ app = FastAPI(title="Squaredle ES API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://squaredle-es.elandy.workers.dev",
+        "https://palabricula.elandy.workers.dev",
         "http://localhost:5500",
         "http://localhost:5173"
     ],
