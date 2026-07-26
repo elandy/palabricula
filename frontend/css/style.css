@@ -193,7 +193,7 @@ h1 {
 }
 #ad-slot {
     width: 100%;
-    min-height: 1px; /* set to 50px when we have ads, prevents layout jump while the ad loads */
+    min-height: 1px; /* set to 50px when we have ads, prevents layout jump while the ad loads  */
     display: flex;
     justify-content: center;
 }
