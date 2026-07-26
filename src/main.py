@@ -12,7 +12,7 @@ from fastapi import Query
 
 from src.utils.normalize import normalize
 
-app = FastAPI(title="Squaredle ES API")
+app = FastAPI(title="Palabricula API")
 
 app.add_middleware(
     CORSMiddleware,

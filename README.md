@@ -1,8 +1,8 @@
-# Squaredle ES
+# Palabrícula
 
 ## Overview
 
-Squaredle ES is a Spanish word puzzle game built with:
+Palabrícula is a Spanish word puzzle game built with:
 
 * FastAPI backend
 * PostgreSQL
@@ -345,7 +345,7 @@ GET /leaderboard/{puzzle_id}
 
 ---
 ##  Analysis
-The API was designed using a capability-driven approach inspired by Arnaud Lauret's API design methodology. Rather than exposing database operations, endpoints correspond to user capabilities required by the Squaredle game. Multiple user interactions may map to the same capability, and each capability is implemented by one or more HTTP operations.
+The API was designed using a capability-driven approach inspired by Arnaud Lauret's API design methodology. Rather than exposing database operations, endpoints correspond to user capabilities required by the Palabrícula game. Multiple user interactions may map to the same capability, and each capability is implemented by one or more HTTP operations.
 ### API Capability Analysis
 
 The API was designed by first identifying the capabilities required by the game rather than starting from endpoints. Each user interaction was decomposed into inputs, successful outcomes, failure cases, and the underlying API capability.
