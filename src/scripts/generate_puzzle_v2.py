@@ -273,7 +273,7 @@ def generate_puzzle(board, puzzle_date: date | None =None, solutions=None):
         for cell in solutions[word]["path"]
     }
 
-    has_long_word = any(len(w) >= 10 for w in normal_words)
+    has_long_word = any(len(w) >= 11 for w in normal_words)
     if len(used) != SIZE * SIZE: raise InvalidPuzzle("Board has unused tiles")
     if not (MIN_WORDS <= len(normal_words) <= MAX_WORDS): raise InvalidPuzzle("Invalid word count")
     if not has_long_word: raise InvalidPuzzle("No long word")

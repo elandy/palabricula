@@ -136,10 +136,7 @@ h1 {
 
 .floating-word {
     position: fixed;
-    left: 50%;
-    top: 38%;
     justify-content: center;
-    /*transform: translate(-50%, -50%);*/
     font-size: 26px;
     font-weight: 700;
     pointer-events: none;
@@ -379,12 +376,10 @@ h1 {
 
 /* word list side */
 .right-panel {
-    width: 260px;
-    max-height: calc(100vh - 140px);
+    width: var(--board-width, 260px); /* 260px fallback before JS sets it */
     overflow-y: auto;
     padding-right: 6px;
 }
-
 #found-words {
     display: flex;
     flex-direction: column;

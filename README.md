@@ -487,27 +487,11 @@ If the RAE service is unavailable, gameplay is unaffected. Dictionary lookups ar
 ### Leaderboards
 
 Pending features:
-* Ranking by:
-  * Speed
+* Leaderboard:
+  * Ranking by Completion Speed
     * For this we need to add a mechanism for estimating play time based on /submit-word calls
   * Current leaderboard is limited to 100 entries. Improve current user display in the leaderboard.
 * Leaderboard history
-
-### Personal statistics:
-
-A page that shows something like:
-
-* Played: 48 days
-* Completed: 45
-* Completion rate: 94%
-* Average score: 87
-* Average solve time: 1:30:00 (this should be done after time estimation is implemented)
-* Fastest solve: 1:20:00
-* Longest streak: 10 days
-* Current streak: 10 days
-* Words found: 1280
-* Bonus words found: 521
-* Total points: 2578
 
 ### Extra puzzles
 
