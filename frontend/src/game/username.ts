@@ -1,12 +1,17 @@
-import { createPlayer } from "../services/api";
-import {ApiError} from "../types/api";
+import {setPlayerName} from "../services/api";
+import {ApiError, PlayerIdentityResponse} from "../types/api";
+import {initGoogleLogin} from "../auth/google";
 
-export async function askUsername(sessionId: string) {
+export async function askUsername(playerId: string): Promise<PlayerIdentityResponse> {
     return new Promise((resolve) => {
+        let currentPlayerId = playerId;
+
         const modal = document.getElementById("username-modal") as HTMLDivElement;
         const input = document.getElementById("username-input") as HTMLInputElement;
         const button = document.getElementById("username-submit") as HTMLButtonElement;
         const error = document.getElementById("username-error") as HTMLDivElement;
+        const googleLoginContainer = document.getElementById("google-login-username") as HTMLDivElement | null;
+        const googleLoginText = googleLoginContainer?.previousElementSibling as HTMLElement | null;
 
         modal.classList.remove("hidden");
         input.focus();
@@ -17,19 +22,21 @@ export async function askUsername(sessionId: string) {
 
             error.textContent = "";
             if (!/^[A-Za-z0-9]{4,25}$/.test(username)) {
-                error.textContent =
-                    "El nombre debe tener entre 4 y 25 caracteres alfanuméricos.";
+                error.textContent = "El nombre debe tener entre 4 y 25 caracteres alfanuméricos.";
                 return;
             }
             try {
-                const player = await createPlayer(sessionId, username);
+                const player = await setPlayerName(currentPlayerId, username);
 
                 modal.classList.add("hidden");
 
                 localStorage.setItem("player_id", player.id);
                 localStorage.setItem("username", player.username);
 
-                resolve(player);
+                resolve({
+                    player_id: player.id,
+                    username: player.username,
+                });
             } catch (err) {
                 const apiError = err as ApiError;
                 error.textContent = apiError.detail ?? "Nombre no disponible";
@@ -37,9 +44,43 @@ export async function askUsername(sessionId: string) {
         }
 
         button.onclick = submit;
-
         input.onkeydown = (e) => {
             if (e.key === "Enter") submit();
         };
+
+        initGoogleLogin(
+            "google-login-username",
+            (player) => {
+                currentPlayerId = player.player_id;
+                localStorage.setItem("player_id", player.player_id);
+                localStorage.setItem("auth_provider", "google");
+
+                if (player.username) {
+                    localStorage.setItem("username", player.username);
+                    modal.classList.add("hidden");
+                    resolve({
+                        player_id: player.player_id,
+                        username: player.username,
+                    });
+
+                    return;
+                }
+
+                localStorage.removeItem("username");
+
+                if (googleLoginContainer) {
+                    googleLoginContainer.classList.add("hidden");
+                    googleLoginContainer.innerHTML = "";
+                }
+
+                if (googleLoginText) {
+                    googleLoginText.textContent = "Google conectado.";
+                }
+
+                error.textContent = "Ahora elige un nombre de usuario.";
+                input.focus();
+            }
+        );
+
     });
 }

@@ -1,0 +1,91 @@
+{
+  "id": "2026-07-25",
+  "size": 4,
+  "board": [
+    [
+      "A",
+      "S",
+      "A",
+      "R"
+    ],
+    [
+      "Z",
+      "Z",
+      "Z",
+      "Z"
+    ],
+    [
+      "Z",
+      "Z",
+      "Z",
+      "Z"
+    ],
+    [
+      "Z",
+      "Z",
+      "Z",
+      "Z"
+    ]
+  ],
+  "word_count": 1,
+  "words": [
+    {
+      "display": "ASAR",
+      "normalized": "ASAR",
+      "bonus": false
+    },
+      {
+      "display": "ASAZ",
+      "normalized": "ASAZ",
+      "bonus": false
+    }
+  ],
+  "paths": {
+    "ASAR": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "ASAZ": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ]
+  },
+  "stats": {
+    "count": 2,
+    "bonus_count": 0,
+    "avg_length": 4,
+    "max_length": 4,
+    "length_distribution": {
+      "4": 2
+    },
+    "score": 2
+  }
+}

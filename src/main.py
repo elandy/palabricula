@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Query
 
 from src.utils.normalize import normalize
+from src.utils.google_auth import verify_google_token
 
 app = FastAPI(title="Palabricula API")
 
@@ -54,9 +55,22 @@ Username = Annotated[
     ),
 ]
 
-class CreatePlayerRequest(BaseModel):
-    session_id: str
+class SetPlayerNameRequest(BaseModel):
+    player_id: str
     username: Username
+
+class BrowserAuthRequest(BaseModel):
+    provider_id: str
+    player_id: str | None = None
+
+class GoogleAuthRequest(BaseModel):
+    id_token: str
+    player_id: str | None = None
+
+class AuthResponse(BaseModel):
+    player_id: str
+    username: str | None
+
 
 # ==========================================================
 # HEALTH
@@ -99,8 +113,7 @@ async def get_puzzle(puzzle_id: str):
 
 @app.post("/session", response_model=SessionResponse)
 async def create_session(request: CreateSessionRequest):
-
-    session_id = service.create_session(
+    session_id = service.get_or_create_session(
         puzzle_id=request.puzzle_id,
         player_id=request.player_id,
     )
@@ -121,10 +134,10 @@ async def get_session(session_id: str):
 
     return session
 
-@app.post("/player")
-async def create_player(request: CreatePlayerRequest):
-    player = service.create_player(
-        session_id=request.session_id,
+@app.post("/player_name")
+async def set_player_name(request: SetPlayerNameRequest):
+    player = service.set_player_username(
+        player_id=request.player_id,
         username=request.username,
     )
 
@@ -132,6 +145,37 @@ async def create_player(request: CreatePlayerRequest):
         "id": player.id,
         "username": player.username,
     }
+
+# ==========================================================
+# AUTHENTICATION
+# ==========================================================
+
+@app.post("/auth/browser", response_model=AuthResponse)
+async def auth_browser(request: BrowserAuthRequest):
+    player = service.resolve_identity(
+        provider="browser",
+        provider_user_id=request.provider_id,
+        legacy_player_id=request.player_id,
+    )
+    return AuthResponse(**player)
+
+@app.post("/auth/google", response_model=AuthResponse)
+async def auth_google(request: GoogleAuthRequest):
+
+    google_user = verify_google_token(
+        request.id_token
+    )
+
+    player = service.resolve_identity(
+        provider="google",
+        provider_user_id=google_user["sub"],
+        legacy_player_id=request.player_id,
+    )
+
+    return AuthResponse(
+        player_id=player["player_id"],
+        username=player["username"],
+    )
 
 # ==========================================================
 # GAMEPLAY

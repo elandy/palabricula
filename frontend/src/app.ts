@@ -3,6 +3,7 @@ import { hideTooltip } from "./ui/tooltip";
 import { init } from "./game/gameInit";
 import { showLeaderboardModal } from "./ui/leaderboard";
 import { updateMuteButton } from "./audio/control";
+import {initLoginModal} from "./ui/loginModal";
 
 document.addEventListener("click", (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -17,9 +18,6 @@ leaderboardButton.addEventListener("click", async () => {
     showLeaderboardModal(data);
 });
 
-// ==========================================================
-// INIT
-// ==========================================================
-
+initLoginModal();
 updateMuteButton();
 await init();

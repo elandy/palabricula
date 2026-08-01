@@ -1,12 +1,13 @@
 from datetime import datetime, date, UTC
 from functools import partial
 
-from sqlalchemy import String, Date, DateTime
+from sqlalchemy import Date, DateTime
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4
-from sqlalchemy import UniqueConstraint
-from sqlalchemy.sql.schema import Index, ForeignKey
+from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy import String, UniqueConstraint, Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 
 from src.db.database import Base
 
@@ -46,10 +47,61 @@ class Player(Base):
     __tablename__ = "players"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid4()))
-    username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(String, unique=True, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
     sessions: Mapped[list["PlayerSession"]] = relationship(back_populates="player")
+    identities: Mapped[list["PlayerIdentity"]] = relationship(
+        back_populates="player",
+        cascade="all, delete-orphan"
+    )
+
+class PlayerIdentity(Base):
+    __tablename__ = "player_identities"
+
+    id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+        default=lambda: str(uuid4())
+    )
+
+    provider: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    provider_user_id: Mapped[str] = mapped_column(
+        String,
+        nullable=False
+    )
+
+    player_id: Mapped[str] = mapped_column(
+        ForeignKey("players.id"),
+        nullable=False,
+        index=True
+    )
+
+    player: Mapped["Player"] = relationship(
+        back_populates="identities"
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=utcnow
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "provider",
+            "provider_user_id",
+            name="uq_identity_provider_user"
+        ),
+        Index(
+            "ix_identity_provider_user",
+            "provider",
+            "provider_user_id"
+        ),
+    )
 
 class FoundWord(Base):
     __tablename__ = "found_words"

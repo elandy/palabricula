@@ -1,4 +1,4 @@
-import { getTodayPuzzle, createSession, getProgress } from "../services/api";
+import {getTodayPuzzle, getOrCreateSession, getProgress, loginBrowser} from "../services/api";
 import { renderBoard } from "./board";
 import { askUsername } from "./username";
 import { updateProgress } from "../ui/progressUI";
@@ -7,6 +7,7 @@ import { setGameState } from "./state";
 import {Puzzle} from "../types/api";
 import {sha256} from "../utils/hash";
 import {updateBoardHints} from "./boardHints";
+import {updateAuthButtons} from "../ui/loginModal";
 
 function buildCellUsage(puzzle: Puzzle): Map<string, Set<string>> {
     const usage = new Map<string, Set<string>>();
@@ -54,34 +55,64 @@ async function loadProgress(sessionId: string, puzzle: Puzzle) {
     }
 }
 
+function getOrCreateBrowserId(): string {
+    let browserId = localStorage.getItem("browser_id");
+    if (!browserId) {
+        browserId = crypto.randomUUID();
+        localStorage.setItem("browser_id", browserId);
+    }
+    return browserId;
+}
+
 export async function init() {
     const puzzle = await getTodayPuzzle();
-    let sessionId: string | null = null;
-    const savedSession = localStorage.getItem("session_id");
-    const savedPuzzle = localStorage.getItem("session_puzzle_id");
+    const browserId = getOrCreateBrowserId();
+    const existingPlayerId = localStorage.getItem("player_id");
+    const authProvider = localStorage.getItem("auth_provider");
 
-    if (!savedSession || savedPuzzle !== puzzle.id) {
-        const session = await createSession(
-            puzzle.id,
-            localStorage.getItem("player_id")
-        );
+    let player;
 
-        sessionId = session.session_id;
-
-        localStorage.setItem("session_id", sessionId);
-        localStorage.setItem("session_puzzle_id", puzzle.id);
+    if (authProvider === "google" && existingPlayerId) {
+        player = {
+            player_id: existingPlayerId,
+            username: localStorage.getItem("username"),
+        };
     } else {
-        sessionId = savedSession;
+        /*  Authenticate browser.
+            Existing users: browser_id + player_id -> create identity linked to existing player
+            New users: browser_id -> create player  */
+        player = await loginBrowser(browserId, existingPlayerId);
+        localStorage.setItem("player_id", player.player_id);
+
+        if (player.username) {
+            localStorage.setItem("username", player.username);
+        }
     }
 
-    const playerId = localStorage.getItem("player_id");
+    updateAuthButtons();
 
-    if (!playerId) {
-        await askUsername(sessionId);
+    /*  Username is now independent of session creation.
+        If your current UX requires username before playing,
+        keep this block.
+        Later this can move to player creation.  */
+    if (!player.username) {
+        player = await askUsername(player.player_id);
+        localStorage.setItem("player_id", player.player_id);
+
+        if (player.username) {
+            localStorage.setItem("username", player.username);
+        }
+
+        updateAuthButtons();
     }
-    if (!sessionId) {
-        throw new Error("Session ID was not created");
-    }
+
+    const session = await getOrCreateSession(
+        puzzle.id,
+        player.player_id
+    );
+    const sessionId = session.session_id;
+    localStorage.setItem("session_id", sessionId);
+    localStorage.setItem("session_puzzle_id", puzzle.id);
 
     setGameState({ puzzle, sessionId, cellUsage: buildCellUsage(puzzle) });
     await loadProgress(sessionId, puzzle);

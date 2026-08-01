@@ -113,3 +113,8 @@ export interface PlayerStatistics {
     longest_streak: number;
     current_streak: number;
 }
+
+export interface PlayerIdentityResponse  {
+    player_id: string;
+    username: string | null;
+}

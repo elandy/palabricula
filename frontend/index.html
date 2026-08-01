@@ -29,6 +29,12 @@
     </div>
     <div class="player-info-container">
         <div id="player-info">Anónimo</div>
+        <button id="login-btn" class="menu-btn">
+            🔑 Login
+        </button>
+        <button id="logout-btn" class="menu-btn hidden">
+            Cambiar usuario
+        </button>
     </div>
     <div id="current-word" translate="no"></div>
 
@@ -45,31 +51,40 @@
     </div>
 
     <div class="page-footer">
-            <div class="footer-info">
-                <p>Hecho por Andrés Politi</p>
-                <p><a href="mailto:elandy@gmail.com">elandy@gmail.com</a></p>
-                <p><a href="https://github.com/elandy/palabricula" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-                <p>&copy; 2026 Palabrícula</p>
+        <img
+            id="floor-cat"
+            src="/assets/cat.gif"
+            alt=""
+            width="100"
+            height="102"
+            draggable="false"
+        />
+        <div class="footer-info">
+            <p class="footer-credit">Hecho por <strong>Andrés Politi</strong></p>
+            <div class="footer-links">
+                <a href="mailto:elandy@gmail.com"><span class="emoji-outline">📧</span> Email</a>
+                <span class="footer-sep">·</span>
+                <a href="https://github.com/elandy/palabricula" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
             </div>
-            <img
-                id="floor-cat"
-                src="/assets/cat.gif"
-                alt=""
-                width="100"
-                height="102"
-                draggable="false"
-            />
+            <p class="footer-copy">&copy; 2026 Palabrícula</p>
         </div>
+    </div>
 </div>
 
 <div id="username-modal" class="modal hidden">
     <div class="modal-card">
         <h2>¡Bienvenido!</h2>
-
+        <img
+            src="/assets/cat3.gif"
+            alt=""
+            width="192"
+            height="92"
+            class="modal-mascot"
+            draggable="false"
+        />
         <p>
             Elige un nombre para aparecer en la clasificación.
         </p>
-
         <input
             id="username-input"
             type="text"
@@ -83,6 +98,11 @@
         <button id="username-submit">
             Continuar
         </button>
+
+        <hr>
+
+        <p> ¿Ya tienes una cuenta? </p>
+        <div id="google-login-username"></div>
     </div>
 </div>
 
@@ -159,6 +179,20 @@
     </div>
 </div>
 
+<div id="login-modal" class="modal hidden">
+    <div class="modal-card">
+        <h2>Login</h2>
+        <p>
+            Choose a login method
+        </p>
+        <div id="google-login-main"></div>
+        <button id="close-login">
+            Cancelar
+        </button>
+    </div>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" defer></script>
 <script type="module" src="src/app.ts"></script>
 
 </body>

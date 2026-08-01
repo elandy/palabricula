@@ -499,6 +499,7 @@ h1 {
     margin-top: 0;
     margin-bottom: 8px;
     color: var(--maroon);
+    text-align: center;
 }
 
 .modal-card p {
@@ -599,6 +600,7 @@ h1 {
 .player-info-container {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 /* person icon takes ::before here, so only the bottom gem (::after,
@@ -772,19 +774,107 @@ h1 {
 }
 
 .page-footer {
+    position: relative;
+
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 12px;
-    padding: 16px;
-    margin-top: 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    max-width: var(--board-width, 260px);
+    margin: 32px auto 0;
+    padding: 14px 24px;
+
+    border-top: 3px solid var(--maroon);
+
+    background-color: var(--cream);
+    background-image:
+        radial-gradient(circle, var(--gold) 42%, transparent 46%),
+        radial-gradient(circle, var(--gold) 42%, transparent 46%);
+    background-size: 8px 8px;
+    background-position:
+        3px 3px,
+        calc(100% - 3px) 3px;
+    background-repeat: no-repeat;
+}
+
+/* small glowing gem, top center, matching the rest of the UI's ornate frames */
+.page-footer::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    transform: translateX(-50%) rotate(45deg);
+    background: var(--gem);
+    box-shadow: 0 0 6px 1px var(--gem-glow);
+    border-radius: 1px;
+    pointer-events: none;
 }
 
 .footer-info {
-    text-align: right;
+    text-align: center;
+}
+
+.footer-credit {
+    margin: 0 0 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--maroon);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 4px;
     font-size: 0.8rem;
-    color: #666;
-    line-height: 1;
+}
+
+.footer-links a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.emoji-outline {
+    text-shadow:
+        -1px -1px 0 var(--ink),
+         1px -1px 0 var(--ink),
+        -1px  1px 0 var(--ink),
+         1px  1px 0 var(--ink);
+}
+.footer-links a:hover {
+    color: var(--maroon);
+    text-decoration: underline;
+}
+.footer-links code {
+    font-family: inherit;
+    background: none;
+    color: var(--gold);
+    font-weight: 700;
+}
+.footer-sep {
+    color: var(--gold);
+    opacity: 0.7;
+}
+
+.footer-copy {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--ink);
+    opacity: 0.55;
+}
+
+#floor-cat {
+    width: 72px;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    flex-shrink: 0;
+    transform: translateY(6px); /* sits slightly below the border, like it's peeking over the edge */
 }
 
 .footer-info a {
@@ -796,10 +886,17 @@ h1 {
     text-decoration: underline;
 }
 
-#floor-cat {
-    width: 100px;
-    height: 102px;
+.modal-mascot {
+    display: block;
+    margin: 0 auto 14px;
+
+    width: 192px;
+    max-width: 100%;
+    height: auto;
+
     image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges; /* older Firefox fallback */
-    flex-shrink: 0;
+    image-rendering: crisp-edges;
+
+    pointer-events: none;
+    user-select: none;
 }

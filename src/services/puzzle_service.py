@@ -1,4 +1,5 @@
 import functools
+import time
 from datetime import date, datetime, UTC
 from heapq import nlargest
 
@@ -9,7 +10,7 @@ from src.db.database import SessionLocal
 from src.db.models import (
     Puzzle,
     PlayerSession,
-    FoundWord, Player,
+    FoundWord, Player, PlayerIdentity,
 )
 import hashlib
 from collections import Counter
@@ -107,14 +108,24 @@ class PuzzleService:
         return get_safe_puzzle_data(puzzle_id)
 
     @staticmethod
-    def create_session(puzzle_id, player_id: str | None = None):
+    def get_or_create_session(puzzle_id: str, player_id: str | None = None):
         with SessionLocal() as db:
+            if player_id:
+                session = (
+                    db.query(PlayerSession)
+                    .filter(
+                        PlayerSession.player_id == player_id,
+                        PlayerSession.puzzle_id == puzzle_id,
+                    )
+                    .first()
+                )
+                if session:
+                    return session.id
             session = PlayerSession(
                 puzzle_id=puzzle_id,
+                player_id=player_id,
                 created_at=datetime.now(UTC),
                 last_seen=datetime.now(UTC),
-                completed_at=None,
-                player_id=player_id,
             )
             db.add(session)
             db.commit()
@@ -344,34 +355,31 @@ class PuzzleService:
             }
 
     @staticmethod
-    def create_player(session_id: str, username: str) -> Player:
+    def set_player_username(player_id: str, username: str) -> Player:
         username = username.strip().lower()
-
-        if not username:
-            raise ValueError("Username cannot be empty")
-        if len(username) < 4:
-            raise ValueError("Username cannot be shorter than 4 characters")
-        if len(username) > 25:
-            raise ValueError("Username cannot be longer than 25 characters")
-        if not username.isalnum():
-            raise ValueError("Username can only contain letters and numbers")
+        if not username: raise ValueError("Username cannot be empty")
+        if len(username) < 4: raise ValueError("Username cannot be shorter than 4 characters")
+        if len(username) > 25: raise ValueError("Username cannot be longer than 25 characters")
+        if not username.isalnum(): raise ValueError("Username can only contain letters and numbers")
 
         with SessionLocal() as db:
-            session = db.get(PlayerSession, session_id)
-            if not session: raise ValueError("Session not found")
+            player = db.get(Player, player_id)
+            if not player: raise ValueError("Player not found")
 
-            existing = (
+            existing_username = (
                 db.query(Player)
                 .filter(Player.username == username)
                 .first()
             )
-            if existing: raise HTTPException(status_code=409, detail="Username already taken")
 
-            player = Player(username=username)
-            db.add(player)
-            db.flush()
+            if existing_username and existing_username.id != player.id:
+                raise HTTPException(
+                    status_code=409,
+                    detail="Username already taken"
+                )
 
-            session.player = player
+            player.username = username
+
             db.commit()
             db.refresh(player)
 
@@ -456,4 +464,126 @@ class PuzzleService:
                 "total_points": total_score,
                 "longest_streak": longest_streak,
                 "current_streak": current_streak,
+            }
+
+    @staticmethod
+    def create_pending_player(db):
+        player = Player(username=None)
+
+        db.add(player)
+        db.flush()
+
+        return player
+
+    def resolve_identity(
+            self,
+            *,
+            provider: str,
+            provider_user_id: str,
+            legacy_player_id: str | None = None,
+    ):
+        with SessionLocal() as db:
+
+            # Existing identity?
+            identity = (
+                db.query(PlayerIdentity)
+                .filter(
+                    PlayerIdentity.provider == provider,
+                    PlayerIdentity.provider_user_id == provider_user_id,
+                )
+                .first()
+            )
+
+            if identity:
+                player = identity.player
+                return {
+                    "player_id": player.id,
+                    "username": player.username,
+                }
+
+            # Migration from legacy browser-only accounts
+            if legacy_player_id:
+                player = db.get(Player, legacy_player_id)
+
+                if player is None:
+                    player = self.create_pending_player(db)
+            else:
+                player = self.create_pending_player(db)
+
+            identity = PlayerIdentity(
+                provider=provider,
+                provider_user_id=provider_user_id,
+                player_id=player.id,
+            )
+
+            db.add(identity)
+
+            try:
+                db.commit()
+
+            except IntegrityError:
+                db.rollback()
+
+                identity = (
+                    db.query(PlayerIdentity)
+                    .filter(
+                        PlayerIdentity.provider == provider,
+                        PlayerIdentity.provider_user_id == provider_user_id,
+                    )
+                    .first()
+                )
+
+                player = identity.player
+
+            return {
+                "player_id": player.id,
+                "username": player.username,
+            }
+
+    def auth_browser(self, browser_id: str, player_id: str | None = None):
+        with SessionLocal() as db:
+            identity = (
+                db.query(PlayerIdentity)
+                .filter(
+                    PlayerIdentity.provider == "browser",
+                    PlayerIdentity.provider_user_id == browser_id
+                )
+                .first()
+            )
+
+            if identity:
+                player = identity.player
+                return {
+                    "id": player.id,
+                    "username": player.username,
+                }
+            if player_id:
+                player = db.get(Player, player_id)
+                if not player: return None
+            else:
+                player = self.create_pending_player(db)
+
+            identity = PlayerIdentity(
+                provider="browser",
+                provider_user_id=browser_id,
+                player_id=player.id,
+            )
+
+            db.add(identity)
+            try:
+                db.commit()
+            except IntegrityError:
+                db.rollback()
+                identity = (
+                    db.query(PlayerIdentity)
+                    .filter(
+                        PlayerIdentity.provider == "browser",
+                        PlayerIdentity.provider_user_id == browser_id
+                    )
+                    .first()
+                )
+                player = identity.player
+            return {
+                "id": player.id,
+                "username": player.username,
             }

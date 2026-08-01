@@ -4,7 +4,7 @@ import {
     Session,
     Progress,
     SubmitWordResponse,
-    LeaderboardData, PlayerStatistics
+    LeaderboardData, PlayerStatistics, PlayerIdentityResponse
 } from "../types/api";
 
 const API_BASE = APP_CONFIG.API_BASE;
@@ -14,7 +14,7 @@ export async function getTodayPuzzle(): Promise<Puzzle> {
     return await res.json();
 }
 
-export async function createSession(
+export async function getOrCreateSession(
     puzzleId: string,
     playerId: string | null = null
 ): Promise<Session> {
@@ -76,14 +76,14 @@ export async function getLeaderboard(): Promise<LeaderboardData> {
     return await res.json();
 }
 
-export async function createPlayer(sessionId: string, username: string) {
-    const res = await fetch(`${API_BASE}/player`, {
+export async function setPlayerName(playerId: string, username: string) {
+    const res = await fetch(`${API_BASE}/player_name`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            session_id: sessionId,
+            player_id: playerId,
             username
         })
     });
@@ -101,6 +101,51 @@ export async function getPlayerStatistics(
     const res = await fetch(
         `${API_BASE}/player/${playerId}/statistics`
     );
+
+    return await res.json();
+}
+
+export async function loginBrowser(
+    browserId: string,
+    playerId: string | null = null
+): Promise<PlayerIdentityResponse> {
+    const res = await fetch(`${API_BASE}/auth/browser`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            provider_id: browserId,
+            player_id: playerId
+        })
+    });
+
+    if (!res.ok) {
+        throw await res.json();
+    }
+
+    return await res.json();
+}
+
+export async function loginGoogle(
+    idToken: string,
+    playerId: string | null = null
+): Promise<PlayerIdentityResponse> {
+
+    const res = await fetch(`${API_BASE}/auth/google`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id_token: idToken,
+            player_id: playerId
+        })
+    });
+
+    if (!res.ok) {
+        throw await res.json();
+    }
 
     return await res.json();
 }
