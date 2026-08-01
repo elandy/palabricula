@@ -21,7 +21,6 @@ function buildCellUsage(puzzle: Puzzle): Map<string, Set<string>> {
             usage.get(key)!.add(hash);
         }
     }
-    console.log("cellUsage", usage);
     return usage;
 }
 
