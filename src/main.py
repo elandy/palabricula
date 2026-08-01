@@ -20,7 +20,8 @@ app.add_middleware(
     allow_origins=[
         "https://palabricula.elandy.workers.dev",
         "http://localhost:5500",
-        "http://localhost:5173"
+        "http://localhost:5173",
+        "https://palabricula.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
