@@ -1,0 +1,82 @@
+:root {
+    --maroon:      #6c1a2a;
+    --maroon-deep: #3c0d16;
+    --ink:         #2a1015;
+
+    --cream:       #ebf4df;
+    --cream-shade: #d7e2c4;
+    --parchment:   #e7ddc7;
+
+    --gold:        #ab9c44;
+    --gold-light:  #d8c878;
+
+    --gem:         #ba33f6;
+    --gem-glow:    rgba(186, 51, 246, 0.55);
+
+    --green:       #4caf50;
+    --green-dark:  #2e7d32;
+    --red:         #c73b3b;
+    --red-dark:    #8f2424;
+
+    --border-soft: rgba(42, 16, 21, 0.3);
+    --shadow-sm:   2px 2px 0 rgba(42, 16, 21, 0.25);
+    --shadow-md:   3px 3px 0 rgba(42, 16, 21, 0.3);
+}
+body {
+    font-family: 'Courier New', ui-monospace, monospace;
+    margin: 0;
+    padding: 0;
+
+    background: var(--parchment);
+
+    color: var(--ink);
+    min-height: 100vh;
+}
+
+.app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 5px;
+
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    color: var(--maroon);
+    text-shadow: 2px 2px 0 var(--gold);
+}
+.legal-page {
+        background-color: var(--cream);
+
+    max-width: 700px;
+    margin: 40px auto;
+    line-height: 1.5;
+    position: relative;
+
+    padding: 16px;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    box-shadow: 4px 4px 0 rgba(42, 16, 21, 0.3);
+}
+
+.legal-page h1 {
+    text-align: center;
+}
+
+.legal-page h2 {
+    color: var(--maroon);
+    margin-top: 24px;
+}
+
+.legal-page a {
+    color: var(--maroon);
+    font-weight: 700;
+}

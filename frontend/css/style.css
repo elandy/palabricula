@@ -1104,36 +1104,6 @@ h1 {
     color: var(--maroon);
 }
 
-.legal-page {
-        background-color: var(--cream);
-
-    max-width: 700px;
-    margin: 40px auto;
-    line-height: 1.5;
-    position: relative;
-
-    padding: 16px;
-
-    overflow-y: auto;
-
-    box-sizing: border-box;
-
-    box-shadow: 4px 4px 0 rgba(42, 16, 21, 0.3);
-}
-
-.legal-page h1 {
-    text-align: center;
-}
-
-.legal-page h2 {
-    color: var(--maroon);
-    margin-top: 24px;
-}
-
-.legal-page a {
-    color: var(--maroon);
-    font-weight: 700;
-}
 .footer-credit {
     margin: 0 0 8px;
 
