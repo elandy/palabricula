@@ -13,6 +13,13 @@
 
 <div class="app" translate="no">
     <div class="top-bar">
+
+    <div class="top-bar-left">
+        <button id="leaderboard-btn" class="menu-btn">📊</button>
+        <button id="mute-btn" class="menu-btn">🔊</button>
+    </div>
+
+    <div class="top-bar-center">
         <img
             id="game-banner"
             src="/assets/banner4.png"
@@ -21,13 +28,18 @@
         />
     </div>
 
+    <div class="top-bar-right">
+        <button id="help-btn" class="menu-btn">❓</button>
+        <button id="share-btn" class="menu-btn">📤</button>
+    </div>
+
+</div>
+
     <div class="meta-bar">
         <div id="progress" class="progress-container">
             <div class="progress-bar"></div>
             <div class="progress-text"></div>
         </div>
-        <button id="leaderboard-btn" class="menu-btn" title="Ranking / Estadísticas">📊</button>
-        <button id="mute-btn" class="menu-btn">🔊</button>
     </div>
     <div class="player-info-container">
         <div id="player-info">Anónimo</div>
@@ -57,26 +69,6 @@
         </div>
         <div class="right-panel">
             <div id="found-words" translate="no"></div>
-        </div>
-    </div>
-
-    <div class="page-footer">
-        <img
-            id="floor-cat"
-            src="/assets/cat.gif"
-            alt=""
-            width="100"
-            height="102"
-            draggable="false"
-        />
-        <div class="footer-info">
-            <p class="footer-credit">Hecho por <strong>Andrés Politi</strong></p>
-            <div class="footer-links">
-                <a href="mailto:elandy@gmail.com"><span class="emoji-outline">📧</span> Email</a>
-                <span class="footer-sep">·</span>
-                <a href="https://github.com/elandy/palabricula" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
-            </div>
-            <p class="footer-copy">&copy; 2026 Palabrícula</p>
         </div>
     </div>
 </div>
@@ -122,8 +114,14 @@
     <div class="modal-card">
 
         <div class="leaderboard-header">
-            <div class="leaderboard-title">Ranking</div>
-            <div id="leaderboard-date"></div>
+            <div>
+                <div id="leaderboard-date" class="leaderboard-title"></div>
+                <div id="next-puzzle-label" class="leaderboard-countdown">
+                    Próximo puzzle: --:--:--
+                </div>
+            </div>
+
+            <button class="modal-close" id="close-leaderboard">✕</button>
         </div>
 
         <div class="leaderboard-tabs main-tabs">
@@ -156,11 +154,6 @@
         <div id="statistics-view" class="hidden">
             <div id="statistics-list"></div>
         </div>
-
-        <button id="close-leaderboard">
-            Cerrar
-        </button>
-
     </div>
 </div>
 
@@ -199,6 +192,176 @@
         <button id="close-login">
             Cancelar
         </button>
+    </div>
+</div>
+
+<div id="help-modal" class="modal hidden">
+    <div class="modal-card">
+
+        <div class="modal-header">
+            <h2>¿Cómo jugar?</h2>
+            <button class="modal-close" id="close-help">✕</button>
+        </div>
+
+        <div class="help-cat">
+            <img
+                src="/assets/cat.gif"
+                alt=""
+                width="96"
+                height="98"
+                draggable="false"
+            />
+        </div>
+
+        <p class="help-intro">
+            Palabrícula es un juego diario de búsqueda de palabras. <br/>
+            Encuentra todas las palabras ocultas formando recorridos sobre el tablero.
+        </p>
+
+        <details open class="help-section">
+            <summary>🎯 Cómo jugar</summary>
+
+            <div class="help-mini-board">
+                <div class="cell selected">C</div>
+                <div class="cell selected">A</div>
+                <div class="cell selected">S</div>
+
+                <div class="cell">W</div>
+                <div class="cell">T</div>
+                <div class="cell selected">A</div>
+
+                <div class="cell">R</div>
+                <div class="cell">A</div>
+                <div class="cell">E</div>
+            </div>
+
+            <p>
+                Une letras <strong>adyacentes</strong> en cualquier dirección.
+                No puedes utilizar la misma casilla dos veces dentro de una palabra.
+            </p>
+        </details>
+
+        <details class="help-section">
+            <summary>💎 Palabras bonus</summary>
+
+            <p>
+                Además de las palabras principales existen
+                <strong>palabras bonus</strong>.
+            </p>
+
+            <ul>
+                <li>Otorgan puntos extra.</li>
+                <li>No cuentan para completar el desafío diario.</li>
+                <li>No cuentan para desbloquear pistas.</li>
+                <li>Pueden seguir descubriéndose incluso cuando una casilla se vuelve gris.</li>
+            </ul>
+
+        </details>
+
+        <details class="help-section">
+            <summary>💡 Pistas</summary>
+
+            <p>
+                Al alcanzar el <strong>50% del puntaje máximo</strong> se desbloquean las pistas.
+            </p>
+
+            <div class="help-example-row">
+
+                <div class="help-cell-example">
+                    <div class="cell">
+                        A
+                        <span class="example-cell-start-count">3</span>
+                    </div>
+                    <p>
+                        Quedan <strong>3 palabras principales</strong> que comienzan aquí.
+                    </p>
+                </div>
+
+                <div class="help-cell-example">
+                    <div class="cell exhausted">
+                        A
+                    </div>
+                    <p>
+                        Ya no participa en ninguna palabra principal, pero aún puede formar parte de palabras bonus.
+                    </p>
+                </div>
+
+            </div>
+
+        </details>
+
+        <details class="help-section">
+            <summary>🏆 Ranking</summary>
+            <p>El ranking puede ordenarse por:</p>
+            <ul>
+                <li>Puntaje</li>
+                <li>Puntaje + bonus</li>
+                <li>Cantidad de palabras</li>
+                <li>Palabras + bonus</li>
+            </ul>
+            <p>Activa la opción <strong>«Incluir bonus»</strong> para sumar los puntos y las palabras bonus.</p>
+
+        </details>
+
+        <details class="help-section">
+            <summary>⏰ Nuevos desafíos</summary>
+            <p>
+                Cada nuevo puzzle se publica todos los días a las
+                <strong>00:00 UTC</strong>.
+            </p>
+            <div id="next-puzzle-countdown" class="countdown">
+                Calculando...
+            </div>
+
+        </details>
+
+        <details class="help-section">
+            <summary>☁️ Cuenta y progreso</summary>
+            <ul>
+                <li>Tu progreso se guarda automáticamente.</li>
+                <li>Si inicias sesión con Google podrás continuar tu partida desde cualquier dispositivo.</li>
+            </ul>
+        </details>
+
+        <hr>
+
+        <div class="help-footer">
+
+            <p class="footer-credit">
+                Hecho por <strong>Andrés Politi</strong>
+            </p>
+
+            <div class="footer-links">
+                <a href="mailto:elandy@gmail.com">📧 Email</a>
+                <span class="footer-sep">·</span>
+                <a
+                    href="https://github.com/elandy/palabricula"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    💻 GitHub
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="share-modal" class="modal hidden">
+
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Compartir</h2>
+            <button class="modal-close" id="close-share">✕</button>
+        </div>
+
+        <p>Invita a tus amigos.</p>
+        <textarea
+            id="share-text"
+            rows="8"
+            readonly
+        ></textarea>
+        <button id="copy-share">Copiar</button>
     </div>
 </div>
 

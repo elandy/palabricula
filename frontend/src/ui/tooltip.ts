@@ -17,12 +17,24 @@ export function showTooltip(word: string, rect: DOMRect) {
     fetchDefinition(word).then(data => {
         tooltip.innerHTML = "";
 
+        const header = document.createElement("div");
+        header.className = "tooltip-header";
+
         const title = document.createElement("div");
         title.className = "tooltip-word";
         title.textContent = data.word;
-        tooltip.appendChild(title);
+        header.appendChild(title);
 
-        data.definitions.forEach((definition: string ) => {
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "tooltip-close";
+        closeBtn.textContent = "✕";
+        closeBtn.setAttribute("aria-label", "Cerrar");
+        closeBtn.addEventListener("click", () => hideTooltip());
+        header.appendChild(closeBtn);
+
+        tooltip.appendChild(header);
+
+        data.definitions.forEach((definition: string) => {
             const item = document.createElement("div");
             item.className = "tooltip-definition";
             item.textContent = definition;
