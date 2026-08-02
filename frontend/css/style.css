@@ -1103,3 +1103,87 @@ h1 {
 
     color: var(--maroon);
 }
+
+.legal-page {
+        background-color: var(--cream);
+
+    max-width: 700px;
+    margin: 40px auto;
+    line-height: 1.5;
+    position: relative;
+
+    padding: 16px;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    box-shadow: 4px 4px 0 rgba(42, 16, 21, 0.3);
+}
+
+.legal-page h1 {
+    text-align: center;
+}
+
+.legal-page h2 {
+    color: var(--maroon);
+    margin-top: 24px;
+}
+
+.legal-page a {
+    color: var(--maroon);
+    font-weight: 700;
+}
+.footer-credit {
+    margin: 0 0 8px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    color: var(--maroon);
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 0.8rem;
+}
+
+.footer-links a {
+    color: var(--ink);
+    text-decoration: none;
+
+    transition: color 0.15s;
+}
+
+.footer-links a:hover {
+    color: var(--maroon);
+    text-decoration: underline;
+}
+
+.footer-sep {
+    color: var(--gold);
+    opacity: 0.7;
+}
+
+.help-footer {
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--cream);
+    border: 1px solid var(--maroon);
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-sm);
+
+    text-align: center;
+}
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
