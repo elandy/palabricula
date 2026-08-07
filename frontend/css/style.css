@@ -488,6 +488,47 @@ h1 {
     white-space: nowrap;
 }
 
+.word-hints {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 10px;
+
+    padding: 10px;
+
+    background: var(--cream);
+    border: 1px solid var(--maroon);
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.word-hints-title {
+    font-weight: 700;
+    color: var(--maroon);
+    margin-bottom: 8px;
+}
+
+.word-hints-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.word-hints button {
+    cursor: pointer;
+
+    border: 1px solid var(--maroon);
+    border-radius: 6px;
+
+    padding: 5px 8px;
+
+    background: var(--cream-shade);
+    color: var(--ink);
+
+    font-weight: 700;
+}
+
 /* word definition tooltip */
 #definition-tooltip {
     position: fixed;

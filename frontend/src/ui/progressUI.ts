@@ -1,4 +1,4 @@
-import { state } from "../game/state";
+import {setGameState, state} from "../game/state";
 
 export function updateProgress() {
     if (!state.puzzle) {
@@ -20,4 +20,10 @@ export function updateProgress() {
     const ratio = totalScore === 0 ? 0 : (state.score / totalScore) * 100;
     const progressBar = document.querySelector("#progress .progress-bar") as HTMLDivElement;
     progressBar.style.width = `${ratio}%`;
+
+    const hintsUnlocked = ratio >= 50;
+
+    setGameState({
+        hintsUnlocked
+    });
 }

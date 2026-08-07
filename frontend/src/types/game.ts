@@ -18,6 +18,10 @@ export interface GameState {
     dragging: boolean;
     cellUsage: Map<string, Set<string>>;
     foundWordHashes: Set<string>;
+
+    hintsUnlocked: boolean;
+    showMissingWords: boolean;
+    showMissingLetters: boolean;
 }
 
 export interface WordGroup {

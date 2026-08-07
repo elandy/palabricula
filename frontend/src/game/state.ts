@@ -19,6 +19,10 @@ export const state: GameState = {
 
     cellUsage: new Map(),
     foundWordHashes: new Set(),
+
+    hintsUnlocked: false,
+    showMissingWords: false,
+    showMissingLetters: false,
 };
 
 export function setGameState(updates: Partial<GameState>) {

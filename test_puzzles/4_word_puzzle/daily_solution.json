@@ -27,16 +27,26 @@
       "Z"
     ]
   ],
-  "word_count": 1,
+  "word_count": 4,
   "words": [
     {
       "display": "ASAR",
       "normalized": "ASAR",
       "bonus": false
     },
-      {
+    {
       "display": "ASAZ",
       "normalized": "ASAZ",
+      "bonus": false
+    },
+    {
+      "display": "ZZZZ",
+      "normalized": "ZZZZ",
+      "bonus": false
+    },
+    {
+      "display": "RASA",
+      "normalized": "RASA",
       "bonus": false
     }
   ],
@@ -76,16 +86,52 @@
         1,
         3
       ]
+    ],
+    "ZZZZ": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    "RASA": [
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
     ]
   },
   "stats": {
-    "count": 2,
+    "count": 4,
     "bonus_count": 0,
     "avg_length": 4,
     "max_length": 4,
     "length_distribution": {
-      "4": 2
+      "4": 4
     },
-    "score": 2
+    "score": 4
   }
 }
