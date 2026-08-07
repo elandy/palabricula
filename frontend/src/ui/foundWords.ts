@@ -4,7 +4,7 @@ import { WordGroup } from "../types/game";
 import {getWordFromCells} from "../utils/puzzleWords";
 
 function getHintLetters(word:string): string {
-
+    word = word.toUpperCase();
     if (word.length <= 4) {
         return word[0] + "***";
     }
