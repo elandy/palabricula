@@ -71,35 +71,45 @@ export function renderFoundWords() {
         if (state.hintsUnlocked && remainingWords.length > 0) {
             hintsContainer.classList.remove("hidden");
 
-            const wordsBtn =
-                document.getElementById("missing-words-btn") as HTMLButtonElement;
+            const wordsBtn = document.getElementById("missing-words-btn") as HTMLButtonElement;
 
-            const lettersBtn =
-                document.getElementById("missing-letters-btn") as HTMLButtonElement;
-
-
+            const lettersBtn = document.getElementById("missing-letters-btn") as HTMLButtonElement;
+            
             wordsBtn.textContent =
                 state.showMissingWords
                     ? "✓ Lista de palabras"
                     : "☐ Lista de palabras";
 
 
-            lettersBtn.textContent =
-                state.showMissingLetters
-                    ? "✓ Primeras letras"
-                    : "☐ Primeras letras";
-
-
             wordsBtn.onclick = () => {
                 state.showMissingWords = !state.showMissingWords;
+
+                // Primeras letras depende de la lista de palabras
+                if (!state.showMissingWords) {
+                    state.showMissingLetters = false;
+                }
+
                 renderFoundWords();
             };
 
 
-            lettersBtn.onclick = () => {
-                state.showMissingLetters = !state.showMissingLetters;
-                renderFoundWords();
-            };
+            if (state.showMissingWords) {
+                lettersBtn.classList.remove("hidden");
+
+                lettersBtn.textContent =
+                    state.showMissingLetters
+                        ? "✓ Primeras letras"
+                        : "☐ Primeras letras";
+
+                lettersBtn.onclick = () => {
+                    state.showMissingLetters = !state.showMissingLetters;
+                    renderFoundWords();
+                };
+
+            } else {
+                lettersBtn.classList.add("hidden");
+                state.showMissingLetters = false;
+            }
 
         } else {
             hintsContainer.classList.add("hidden");

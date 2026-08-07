@@ -392,6 +392,52 @@ A word is valid if:
 * Is formed by adjacent tiles (diagonals allowed)
 * Uses each tile at most once per word
 
+## Gameplay Hints
+
+Palabrícula includes progressive hints that unlock during the daily challenge.
+
+Hints become available when the player reaches **50% of the maximum puzzle score**.
+
+### Tile hints
+
+Each tile can display additional information:
+
+* A number in the corner indicates how many remaining non-bonus words start from that tile.
+* Tiles that no longer belong to any remaining non-bonus word become gray.
+* Gray tiles can still be used to discover bonus words.
+
+### Word list hints
+
+Once hints are unlocked, players can optionally enable additional assistance:
+
+#### Missing word list
+
+Shows all undiscovered non-bonus words in alphabetical order, keeping discovered words visible as a reference. Missing words are hidden using placeholders.
+
+Example:
+- ASAR
+- A***
+- CASA
+- C***
+
+
+#### First letter hints
+
+Shows the beginning of undiscovered words.
+
+The amount of information revealed depends on word length:
+
+* Short words show the first letter.
+* Medium words show the first two letters.
+* Longer words may also reveal ending letters.
+
+Example:
+- A***
+- CA***
+- PE***OS
+
+Hints never reveal the complete solution immediately and are only available after reaching half of the puzzle progress.
+
 ---
 
 ## Backend Behavior
@@ -401,6 +447,7 @@ A word is valid if:
 * Scoring formula: `max(len(word) - 3, 1)`
 * Progress is computed from database state and solution data
 * Solution data is never exposed through the API
+* Hint generation happens client-side using puzzle metadata already required for gameplay. Complete solutions are not exposed through the API.
 
 ---
 
