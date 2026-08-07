@@ -1,4 +1,4 @@
-import {getTodayPuzzle, getOrCreateSession, getProgress, loginBrowser} from "../services/api";
+import {getTodayPuzzle, getOrCreateSession, getProgress} from "../services/api";
 import { renderBoard } from "./board";
 import { askUsername } from "./username";
 import { updateProgress } from "../ui/progressUI";
@@ -54,48 +54,17 @@ async function loadProgress(sessionId: string, puzzle: Puzzle) {
     }
 }
 
-function getOrCreateBrowserId(): string {
-    let browserId = localStorage.getItem("browser_id");
-    if (!browserId) {
-        browserId = crypto.randomUUID();
-        localStorage.setItem("browser_id", browserId);
-    }
-    return browserId;
-}
-
 export async function init() {
     const puzzle = await getTodayPuzzle();
-    const browserId = getOrCreateBrowserId();
-    const existingPlayerId = localStorage.getItem("player_id");
-    const authProvider = localStorage.getItem("auth_provider");
-
-    let player;
-
-    if (authProvider === "google" && existingPlayerId) {
-        player = {
-            player_id: existingPlayerId,
-            username: localStorage.getItem("username"),
-        };
-    } else {
-        /*  Authenticate browser.
-            Existing users: browser_id + player_id -> create identity linked to existing player
-            New users: browser_id -> create player  */
-        player = await loginBrowser(browserId, existingPlayerId);
-        localStorage.setItem("player_id", player.player_id);
-
-        if (player.username) {
-            localStorage.setItem("username", player.username);
-        }
-    }
+    let playerId = localStorage.getItem("player_id");
 
     updateAuthButtons();
 
-    /*  Username is now independent of session creation.
-        If your current UX requires username before playing,
-        keep this block.
-        Later this can move to player creation.  */
-    if (!player.username) {
-        player = await askUsername(player.player_id);
+    if (!playerId) {
+        const player = await askUsername();
+
+        playerId = player.player_id;
+
         localStorage.setItem("player_id", player.player_id);
 
         if (player.username) {
@@ -105,10 +74,7 @@ export async function init() {
         updateAuthButtons();
     }
 
-    const session = await getOrCreateSession(
-        puzzle.id,
-        player.player_id
-    );
+    const session = await getOrCreateSession(puzzle.id, playerId);
     const sessionId = session.session_id;
     localStorage.setItem("session_id", sessionId);
     localStorage.setItem("session_puzzle_id", puzzle.id);

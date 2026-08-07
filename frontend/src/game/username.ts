@@ -1,10 +1,24 @@
-import {setPlayerName} from "../services/api";
+import {
+    loginBrowser,
+    setPlayerName,
+} from "../services/api";
 import {ApiError, PlayerIdentityResponse} from "../types/api";
 import {initGoogleLogin} from "../auth/google";
 
-export async function askUsername(playerId: string): Promise<PlayerIdentityResponse> {
+function getOrCreateBrowserId(): string {
+    let browserId = localStorage.getItem("browser_id");
+
+    if (!browserId) {
+        browserId = crypto.randomUUID();
+        localStorage.setItem("browser_id", browserId);
+    }
+
+    return browserId;
+}
+
+export async function askUsername(): Promise<PlayerIdentityResponse> {
     return new Promise((resolve) => {
-        let currentPlayerId = playerId;
+        let currentPlayerId: string | null = null;
 
         const modal = document.getElementById("username-modal") as HTMLDivElement;
         const input = document.getElementById("username-input") as HTMLInputElement;
@@ -26,6 +40,10 @@ export async function askUsername(playerId: string): Promise<PlayerIdentityRespo
                 return;
             }
             try {
+                if (!currentPlayerId) {
+                    const browserPlayer = await loginBrowser(getOrCreateBrowserId());
+                    currentPlayerId = browserPlayer.player_id;
+                }
                 const player = await setPlayerName(currentPlayerId, username);
 
                 modal.classList.add("hidden");
